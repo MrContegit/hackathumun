@@ -1,7 +1,9 @@
 package com.conte.hackothumun.controller;
 
+import com.conte.hackothumun.entity.Billet;
 import com.conte.hackothumun.entity.Event;
 import com.conte.hackothumun.entity.FileApp;
+import com.conte.hackothumun.service.BilletServiceImpl;
 import com.conte.hackothumun.service.EventServiceImplementation;
 import com.conte.hackothumun.service.FileStorageService;
 import lombok.AllArgsConstructor;
@@ -25,6 +27,7 @@ import java.util.List;
 public class EventController {
     private EventServiceImplementation eventServiceImplementation;
     private FileStorageService fileStorageService;
+    private BilletServiceImpl billetServiceImpl;
 
     @GetMapping("/index")
     public String index(
@@ -43,30 +46,49 @@ public class EventController {
     }
 
     @GetMapping("/formEvents")
-    public String insertEvents(Model model){
-        model.addAttribute("event", new Event());
+    public String formEvents(Model model){
+        Event event = new Event();
+        event.setPrivate(false);
+        event.setApprove(false);
+        model.addAttribute("event",event);
+        model.addAttribute("billet", new Billet());
         return "formEvents";
     }
 
     @PostMapping("/createEvent")
-    public String createEvent(@Valid Event ev, MultipartFile[] files, BindingResult bindingResult, Model model){
-        if(bindingResult.hasErrors()){
+    public String createEvent(@Valid Event ev, MultipartFile[] files, @Valid Billet billet, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
             return "formEvents";
         }
         try {
-            if(eventServiceImplementation.eventExists(ev.getTitle())){
-                model.addAttribute("errorMessage","cette evenement existe deja");
+            if (eventServiceImplementation.eventExists(ev.getTitle())) {
+                model.addAttribute("errorMessage", "Cet événement existe déjà");
                 return "formEvents";
             }
+
             Event event = eventServiceImplementation.insert(ev);
             List<FileApp> fileAppList = new ArrayList<>();
 
-            for(MultipartFile file : files){
-                FileApp fileApp = fileStorageService.storeFile(file,event);
+            for (MultipartFile file : files) {
+                FileApp fileApp = fileStorageService.storeFile(file, event);
                 fileAppList.add(fileApp);
             }
 
-            event.setFilePath(fileAppList);
+            // Vérifiez l'objet billet avant de l'insérer
+            if (billet == null) {
+                model.addAttribute("errorMessage", "Le billet ne doit pas être null");
+                return "formEvents";
+            }
+
+            billet.setEvent(event);
+            Billet savedBillet = billetServiceImpl.insert(billet);
+
+            if (savedBillet.getId() == null) {
+                model.addAttribute("errorMessage", "Le billet n'a pas pu être créé");
+                return "formEvents";
+            }
+
+            event.setFilePathList(fileAppList);
             eventServiceImplementation.update(event);
             return "redirect:/index";
         } catch (RuntimeException e) {
@@ -74,6 +96,7 @@ public class EventController {
             model.addAttribute("errorMessage", "Une erreur s'est produite lors de la création de l'événement");
             return "formEvents";
         }
-
     }
+
+
 }
