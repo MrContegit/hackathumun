@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,7 +33,7 @@ public class EventController {
     public String index(
             Model model,
             @RequestParam(name="page",defaultValue = "0") int page,
-            @RequestParam(name="size",defaultValue = "2") int size,
+            @RequestParam(name="size",defaultValue = "4") int size,
             @RequestParam(name="keyword",defaultValue="") String kw
             ) {
         Page<Event> eventList = eventServiceImplementation.findAllEvents(page,size,kw);
@@ -47,7 +48,7 @@ public class EventController {
     @GetMapping("/formEvents")
     public String formEvents(Model model){
         Event event = new Event();
-        event.setPrivate(false);
+        event.setPrivated(false);
         event.setApprove(false);
         model.addAttribute("event",event);
         model.addAttribute("billet", new Billet());
@@ -97,5 +98,8 @@ public class EventController {
         }
     }
 
-
+    @DeleteMapping("/deleteEvent")
+    public void deleteEvent(@RequestParam(name="id",required=true) Long id) {
+        eventServiceImplementation.delete(id);
+    }
 }

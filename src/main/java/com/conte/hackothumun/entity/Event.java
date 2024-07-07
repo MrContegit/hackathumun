@@ -21,10 +21,10 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long eventId;
     private String title;
-    private boolean isPrivate;
+    private boolean privated;
     private String category;
     private int capacity;
-    private boolean isApprove;
+    private boolean approve;
     private String description;
     private Date datedeb;
     private Date datefin;
@@ -33,10 +33,10 @@ public class Event {
     private List<FileApp> filePathList;
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private List<Billet> billetList;
-//    @ManyToOne
-//    @JoinColumn(name = "organizer_id", nullable = false)
-//    private Organisateur organizerId;
+    @ManyToOne
+    @JoinColumn(name = "organizer_id", nullable = false)
+    private UserApp organizerId;
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
-    private List<Participant> participants;
+    private List<UserApp> participants;
 
 }

@@ -62,10 +62,23 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
             overflow: hidden;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .form-container .form-group {
             margin-bottom: 1.5rem;
+            animation: fadeIn 1s ease-in-out;
         }
 
         .form-container h2 {
@@ -76,6 +89,7 @@
             background-color: rgba(255, 255, 255, 0.1);
             color: #ffffff;
             border: none;
+            transition: background-color 0.3s, box-shadow 0.3s;
         }
 
         .form-container .form-control::placeholder, .form-container .form-control-file::placeholder {
@@ -91,12 +105,18 @@
             background-color: #000000;
             color: #ffffff;
             border-color: #000000;
+            transition: background-color 0.3s, transform 0.3s;
         }
 
         .form-container .btn-primary:hover {
             background-color: #666666;
             color: #ffffff;
             border-color: #000000;
+            transform: scale(1.05);
+        }
+        .form-container:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease-in-out;
         }
 
         .listEventsUser {
@@ -109,6 +129,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             max-width: 400px;
             box-sizing: border-box;
+            animation: fadeIn 1s ease-in-out;
         }
 
         .event-card {
@@ -122,7 +143,9 @@
             align-items: center;
             color: #ffffff;
             box-sizing: border-box;
+            animation: fadeIn 1s ease-in-out;
         }
+
         .form-control, .custom-select {
             background-color: rgba(255, 255, 255, 0.1);
             color: #ffffff;
@@ -159,10 +182,23 @@
             text-decoration: none;
             font-weight: 500;
             margin-right: 20px;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #cccccc;
         }
 
         .hidden {
             display: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .visible {
+            display: block;
+            opacity: 1;
+            transition: opacity 0.5s;
         }
 
         @media (max-width: 768px) {
@@ -171,7 +207,8 @@
                 gap: 20px;
             }
         }
-        .form-group select option{
+
+        .form-group select option {
             color: black;
         }
     </style>
@@ -236,19 +273,19 @@
             </div>
             <div class="eventGpe1">
                 <div class="form-group">
-                    <label for="isPrivate">Private Event</label>
+                    <label for="privated">Private Event</label>
                     <div class="custom-control custom-switch">
                         <input type="hidden" name="isPrivate" value="false"/>
-                        <input type="checkbox" class="custom-control-input" id="isPrivate" name="isPrivate" th:id="'isPrivate'" th:checked="*{isPrivate}">
-                        <label class="custom-control-label" for="isPrivate" th:for="'isPrivate'">Yes</label>
+                        <input type="checkbox" class="custom-control-input" id="privated" name="privated" th:id="'privated'" th:field="*{privated}">
+                        <label class="custom-control-label" for="privated" th:for="'privated'">Yes</label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="isApprove">Approved</label>
+                    <label for="approve">Approved</label>
                     <div class="custom-control custom-switch">
                         <input type="hidden" name="isApprove" value="false"/>
-                        <input type="checkbox" class="custom-control-input" id="isApprove" name="isApprove" th:id="'isApprove'" th:checked="*{isApprove}">
-                        <label class="custom-control-label" for="isApprove"  th:for="'isApprove'">Yes</label>
+                        <input type="checkbox" class="custom-control-input" id="approve" name="approve" th:id="'approve'" th:field="*{approve}">
+                        <label class="custom-control-label" for="approve" th:for="'approve'">Yes</label>
                     </div>
                 </div>
             </div>
@@ -260,14 +297,14 @@
             <h3 class="section-title">Ticket Information (Optional)</h3>
             <div class="form-group">
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="showTicket" onchange="toggleTicketSection()" th:id="'showTicket'" th:checked="${billet.isFree}">
+                    <input type="checkbox" class="custom-control-input" id="showTicket" onchange="toggleTicketSection()" th:id="'showTicket'" th:checked="${billet.free}">
                     <label class="custom-control-label" for="showTicket" th:for="'showTicket'">Show Ticket Price</label>
                 </div>
             </div>
             <div id="ticketSection" class="hidden">
                 <div class="form-group">
                     <label for="ticketPrice">Ticket Price</label>
-                    <input type="number" class="form-control" id="ticketPrice" placeholder="Enter ticket price" th:value="${billet.prix}">
+                    <input type="number" class="form-control" id="ticketPrice" placeholder="Enter ticket price" th:field="${billet.prix}">
                 </div>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Create Event</button>
@@ -283,7 +320,9 @@
         var showTicket = document.getElementById('showTicket').checked;
         if (showTicket) {
             ticketSection.classList.remove('hidden');
+            ticketSection.classList.add('visible');
         } else {
+            ticketSection.classList.remove('visible');
             ticketSection.classList.add('hidden');
         }
     }

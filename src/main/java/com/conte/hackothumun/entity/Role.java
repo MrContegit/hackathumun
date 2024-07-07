@@ -2,24 +2,21 @@ package com.conte.hackothumun.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "roles")
+@Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class Billet {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private float prix;
-//    @Column(nullable = false, columnDefinition = "true")
-    private boolean free = false;
-    @ManyToOne
-    @JoinColumn(name = "event_id")
-    private Event event;
 
-    @ManyToOne
-    private UserApp user;
+    private String name;
+
 }

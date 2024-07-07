@@ -4,6 +4,6 @@ public interface ServiceCRUD<T>{
      T select(String name);
      T insert(T value);
      T update(T value);
-     void delete(T value);
+     void delete(Long value);
 
 }

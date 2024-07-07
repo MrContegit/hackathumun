@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -21,7 +23,12 @@ public class UserApp {
     private String username;
     @Column(nullable = false, unique = true)
     private String password;
+    private String confirmPassword;
     private String email;
-    @Column(nullable = false)
-    private String profileDetails;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Event event;
 }

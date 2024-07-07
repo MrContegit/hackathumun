@@ -144,11 +144,26 @@
         .form-container .form-group input:focus + .fa {
             color: #ffffff;
         }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .form-footer a {
+            color: #ffcc00;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .form-footer a:hover {
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <form th:action="@{/login}" method="post" class="form-container">
+    <form th:action="@{/loginValid}" method="post" class="form-container">
         <h2>Login</h2>
         <div class="form-group">
             <i class="fa fa-envelope"></i>
@@ -159,6 +174,9 @@
             <input type="password" class="form-control" id="password" placeholder="Enter password" required>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Login</button>
+        <div class="form-footer">
+            <a href="#">Mot de passe oublié?</a> | <a th:href="@{/register}">S'inscrire</a>
+        </div>
     </form>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

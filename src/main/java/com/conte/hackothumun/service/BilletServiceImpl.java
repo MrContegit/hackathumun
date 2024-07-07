@@ -26,8 +26,6 @@ public class BilletServiceImpl implements ServiceCRUD<Billet> {
     @Override
     public Billet insert(Billet value) {
         System.out.println("***********BilletServiceImpl insert******************");
-//        Billet billet = billetRepo.findById(value.getId()).orElse(null);
-//        if(billet != null) throw new RuntimeException("This billet already  exists");
         return billetRepo.save(value);
     }
 
@@ -37,9 +35,9 @@ public class BilletServiceImpl implements ServiceCRUD<Billet> {
     }
 
     @Override
-    public void delete(Billet value) {
-        Billet billet = billetRepo.findById(value.getId()).orElse(null);
+    public void delete(Long value) {
+        Billet billet = billetRepo.findById(value).orElse(null);
         if(billet == null) throw new RuntimeException("This billet don't exists");
-        billetRepo.deleteById(value.getId());
+        billetRepo.deleteById(value);
     }
 }
